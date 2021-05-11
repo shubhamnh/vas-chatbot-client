@@ -1,0 +1,16 @@
+.DS_Store
+/tmp
+node_modules
+/dist
+/.idea
+*.stackdump
+prod.env.js
+
+# Firebase files
+/.firebase
+.firebaserc
+firebase.json
+
+# Logs
+/logs
+debug.log
