@@ -50,13 +50,12 @@ export default new Router({
       component: SettingsView,
       beforeEnter (to, from, next) {
         if (store.state.Token) {
-          axios.get('/login/info/'+store.state.rno+'/', store.state.config)
+          axios.get('/api/settings/', store.state.config)
               .then(res => {
-                localStorage.setItem('name', res.data.name);
+                // localStorage.setItem('name', res.data.name);
                 store.commit('userInfo', {
-                  name: res.data.name,
-                  interests: {'batch': res.data.batch, 'sports' : res.data.sports, 'creative' : res.data.creative, 'cultural' : res.data.cultural,
-                    'dance' : res.data.dance, 'drama' : res.data.drama, 'placement' : res.data.placement, 'workshop' : res.data.workshop, 'study' : res.data.study}
+                  batch: res.data.batch,
+                  interests: res.data.interests
                 })
                 console.log(res)
                 next()

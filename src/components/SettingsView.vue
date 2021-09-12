@@ -2,54 +2,21 @@
   <div>
     <form @submit.prevent="onSubmit">
         <div class="select">
-			<label v-mdl class="mdl-switch mdl-js-switch mdl-js-ripple-effect mdl-cell interest" for="placement">
-              <input type="checkbox" id="placement" class="mdl-switch__input" v-model="placement">
-              <span class="mdl-switch__label">Placement</span>
+          <div v-for="interest in interests" :key="interest.interest_id">
+            <label v-mdl class="mdl-switch mdl-js-switch mdl-js-ripple-effect mdl-cell interest" :for="interest.name">
+              <input type="checkbox" :id="interest.name" class="mdl-switch__input" v-model="interest.status">
+              <span class="mdl-switch__label">{{interest.name}}</span>
             </label>
             <br>
-            <label v-mdl class="mdl-switch mdl-js-switch mdl-js-ripple-effect mdl-cell interest" for="study">
-              <input type="checkbox" id="study" class="mdl-switch__input" v-model="study">
-              <span class="mdl-switch__label">Study</span>
-            </label>
+          </div>
             <br>
-            <label v-mdl class="mdl-switch mdl-js-switch mdl-js-ripple-effect mdl-cell interest" for="creative">
-              <input type="checkbox" id="creative" class="mdl-switch__input" v-model="creative">
-              <span class="mdl-switch__label">Creative</span>
-            </label>
-            <br>
-            <label v-mdl class="mdl-switch mdl-js-switch mdl-js-ripple-effect mdl-cell interest" for="cultural">
-              <input type="checkbox" id="cultural" class="mdl-switch__input" v-model="cultural">
-              <span class="mdl-switch__label">Cultural</span>
-            </label>
-            <br>
-            <label v-mdl class="mdl-switch mdl-js-switch mdl-js-ripple-effect mdl-cell interest" for="dance">
-              <input type="checkbox" id="dance" class="mdl-switch__input" v-model="dance">
-              <span class="mdl-switch__label">Dance</span>
-            </label>
-            <br>
-            <label v-mdl class="mdl-switch mdl-js-switch mdl-js-ripple-effect mdl-cell interest" for="drama">
-              <input type="checkbox" id="drama" class="mdl-switch__input" v-model="drama">
-              <span class="mdl-switch__label">Drama</span>
-            </label>
-            <br>
-            <label v-mdl class="mdl-switch mdl-js-switch mdl-js-ripple-effect mdl-cell interest" for="sports">
-              <input type="checkbox" id="sports" class="mdl-switch__input" v-model="sports">
-              <span class="mdl-switch__label">Sports</span>
-            </label>
-            <br>
-            <label v-mdl class="mdl-switch mdl-js-switch mdl-js-ripple-effect mdl-cell interest" for="workshop">
-              <input type="checkbox" id="workshop" class="mdl-switch__input" v-model="workshop">
-              <span class="mdl-switch__label">Workshop</span>
-            </label>
-            <br>
-            
             <mdl-select label="Batch" id="batch-select" v-model="batch" :options="batchesArray"></mdl-select>
         </div>
         <br>
         <button v-mdl class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored" type="submit">Apply Changes</button>
     </form>
       <br><br>
-      <button v-mdl v-if="checksw" v-on:click="enablenotif" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored enablenotif">Enable Push Notifications</button>
+      <button v-mdl v-if="checksw" @click="enablenotif" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored enablenotif">Enable Push Notifications</button>
       <br><br>
       <mdl-snackbar display-on="change"></mdl-snackbar>
   </div>
@@ -60,8 +27,7 @@ import axios from 'axios'
 export default {
   methods: {
     onSubmit () {
-      axios.put('/login/info/'+this.rno+'/', {batch: this.batch, sports : this.sports, creative : this.creative, cultural : this.cultural,
-        dance : this.dance, drama : this.drama, placement : this.placement, workshop : this.workshop, study : this.study,}, this.config)
+      axios.put('/api/settings/', {batch: this.batch, interests : this.interests}, this.config)
           .then(res => {
             console.log(res)
             this.$root.$emit('change', { message: 'Changes successfully applied!' })
@@ -75,7 +41,7 @@ export default {
       this.$refs.pass.open()
     },
     changepass () {
-      axios.put('/login/changepass/'+this.rno+'/', {passw: this.pass}, this.config)
+      axios.put('/api/changepass/'+this.rno+'/', {passw: this.pass}, this.config)
           .then(res => {
             console.log(res)
             this.$refs.pass.close()
@@ -157,7 +123,7 @@ export default {
                         'name': rno,
                         'registration_id': registration_id
                 };
-                axios.post('/login/device/wpd/', data, config)
+                axios.post('/api/device/wpd/', data, config)
                   .then(res => {
                     console.log(res)
                   })
@@ -194,20 +160,13 @@ export default {
   },
   data () {
     return {
-      creative: this.$store.getters.interests.creative,
-      sports: this.$store.getters.interests.sports,
-      cultural: this.$store.getters.interests.cultural,
-      dance: this.$store.getters.interests.dance,
-      drama: this.$store.getters.interests.drama,
-      placement: this.$store.getters.interests.placement,
-      workshop: this.$store.getters.interests.workshop,
-	    study: this.$store.getters.interests.study,
+      interests : this.$store.getters.settings.interests,
       rno: this.$store.getters.rno,
       config: this.$store.getters.config,
       applicationServerKey: process.env.APP_SERVER_KEY,
       change: false,
       pass: null,
-      batch: this.$store.getters.interests.batch,
+      batch: this.$store.getters.settings.batch,
       batchesArray: ['1', '2', '3', '4']
     }
   }

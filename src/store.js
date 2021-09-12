@@ -12,8 +12,9 @@ export default new Vuex.Store({
     Token: null,
     rno: null,
     name: null,
+    currentClass: null,
     messages: null,
-    interests: null,
+    settings: null,
     config: null,
     notifs: null,
     personal: null,
@@ -28,8 +29,11 @@ export default new Vuex.Store({
     setName (state, name) {
       state.name = name
     },
+    setCurrentClass (state, current_class) {
+      state.currentClass = current_class
+    },
     userInfo (state, info){
-      state.interests = info.interests
+      state.settings = info
     },
     notifs (state, notifs){
       state.notifs = notifs
@@ -48,6 +52,7 @@ export default new Vuex.Store({
       state.rno = null
       state.config = null
       state.name = null
+      state.currentClass = null
     },
     setBotMessage (state, messagedata) {
       console.log(messagedata)
@@ -77,6 +82,7 @@ export default new Vuex.Store({
         rno: localStorage.getItem('rno')
       })
       commit('setName', localStorage.getItem('name'))
+      commit('setCurrentClass', localStorage.getItem('currentClass'))
       commit('setConfig')
       router.replace('/chat')
     },
@@ -95,7 +101,7 @@ export default new Vuex.Store({
         })
     },
     verifyToken ({commit, state}) {
-      axios.post('/api-token-verify/', {
+      axios.post('/api/token-verify/', {
         token: state.Token
       })
         .then(res => {
@@ -107,7 +113,7 @@ export default new Vuex.Store({
 
     },
     getNotifs ({commit, state}) {
-      axios.get('/login/notifs/', state.config)
+      axios.get('/api/groupnotif/', state.config)
           .then(res => {
             commit('notifs', res.data)
             console.log(res)
@@ -117,7 +123,7 @@ export default new Vuex.Store({
           })
     },
     getPersonal ({commit, state}) {
-      axios.get('/login/personal/', state.config)
+      axios.get('/api/individualnotif/', state.config)
           .then(res => {
             commit('personal', res.data)
             console.log(res)
@@ -143,14 +149,17 @@ export default new Vuex.Store({
     messages (state) {
       return state.messages
     },
-    interests (state) {
-      return state.interests
+    settings (state) {
+      return state.settings
     },
     rno (state) {
       return state.rno
     },
     name (state) {
       return state.name
+    },
+    currentClass (state) {
+      return state.currentClass
     },
     notifs (state) {
       return state.notifs

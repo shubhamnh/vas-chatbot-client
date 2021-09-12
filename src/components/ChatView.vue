@@ -2,7 +2,7 @@
     <div>
         <div>
             <ul class="messview" ref="messview">
-                <li v-for="message in this.messages" stagger="1000" style="width:100%">
+                <li v-for="(message, index) in this.messages" :key="index" stagger="1000" style="width:100%">
                     <div v-if="message.who === 'bot'" class="msj macro">
                         <div class="avatar"><img class="img-circle" style="width:100%;" src="../assets/bot.svg" /></div>
                         <div class="text text-l">
@@ -33,16 +33,16 @@
         </div>
         <div class="typefield">
             <div class="faq" style="position:relative; display:flex; width:100%;">
-                    <button v-for="faq in this.faqs" v-mdl type="button" v-on:click="sendfaq(faq)" class="mdl-chip chip">
+                    <button v-for="(faq, index) in this.faqs" :key="index" v-mdl type="button" @click="sendfaq(faq)" class="mdl-chip chip">
                         <span v-mdl class="mdl-chip__text">{{faq}}</span>
                     </button>
             </div>
             <div style="position:relative; display:flex; width:100%;">
                 <div v-mdl class="mdl-textfield mdl-js-textfield" style="width:80%;">
-                    <textarea v-mdl  v-on:keyup.enter="mymess" class="mdl-textfield__input" type="text" rows="1" ref="mymess" id="mymess"></textarea>
-                    <label v-mdl class="mdl-textfield__label" for="mymess">How can I help you?</label>
+                    <textarea v-mdl  @keyup.enter="processQuery" class="mdl-textfield__input" type="text" rows="1" v-model="query" id="query-text"></textarea>
+                    <label v-mdl class="mdl-textfield__label" for="query-text">How can I help you?</label>
                 </div>
-                <button v-mdl v-on:click="mymess" class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-button--colored">
+                <button v-mdl @click="processQuery" class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-button--colored">
                     <i class="material-icons">send</i>
                 </button>
             </div>
@@ -57,31 +57,30 @@
   
   export default {
     methods: {
-      mymess: function () {
-        const query = {
-          text: this.$refs.mymess.value,
-        }
-        console.log(query)
-        this.messages.push({'text': this.$refs.mymess.value, 'time': this.currentTime(), 'who': 'me',})
-        this.writeData('messages', {'text': this.$refs.mymess.value, 'time': this.currentTime(), 'who': 'me'}, this.messages.length+1)
-        this.$refs.mymess.value = ''
-        this.processingText = 'Just a moment....'
-        this.processing = true
-        axios.post('/login/query/', {query: query.text}, this.config)
+      processQuery: function () {
+        this.query = this.query.trim()
+        this.messages.push({'text': this.query, 'time': this.currentTime(), 'who': 'me',})
+        this.writeData('messages', {'text': this.query, 'time': this.currentTime(), 'who': 'me'}, this.messages.length+1)
+
+        axios.post('/api/query/', {query: this.query}, this.config)
             .then(res => {
               this.processing = false
-              this.messages.push({'text': res.data.response, 'time': this.currentTime(), 'who': 'bot',})
-              this.writeData('messages', {'text': res.data.response, 'time': this.currentTime(), 'who': 'bot'}, this.messages.length+1)
+              this.messages.push({'text': res.data.response[0].text, 'time': this.currentTime(), 'who': 'bot',})
+              this.writeData('messages', {'text': res.data.response[0].text, 'time': this.currentTime(), 'who': 'bot'}, this.messages.length+1)
               console.log(res)
             })
             .catch(error => {
               console.log(error)
               this.processingText = 'An error occurred..'
             })
+
+        this.query = ''
+        this.processingText = 'Just a moment....'
+        this.processing = true
       },
       sendfaq: function(query) {
-          this.$refs.mymess.value = query
-          this.mymess()
+          this.query = query
+          this.processQuery()
       },
       currentTime(){
         var date = new Date()
@@ -119,6 +118,7 @@
     },
     data () {
       return {
+        query: '',
         messno: data.messages.length,
         config: this.$store.getters.config,
         processing: false,

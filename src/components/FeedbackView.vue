@@ -5,7 +5,7 @@
             <br>
             <mdl-textfield floating-label="Message" v-model="details" class="input" textarea rows="6"></mdl-textfield>
             <br>
-            <button v-mdl v-on:click="submit" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored">Submit</button>
+            <button v-mdl @click="submit" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored">Submit</button>
 
         <mdl-snackbar display-on="submit"></mdl-snackbar>
     </div>
@@ -17,7 +17,7 @@
     name: "feedback-view",
     methods: {
       submit () {
-        axios.post('/login/support/', {subject: this.subject, details: this.details, rno: this.rno, name: this.name}, this.config)
+        axios.post('/api/feedback/', {subject: this.subject, details: this.details}, this.config)
             .then(res => {
               console.log(res)
               this.subject = null
@@ -35,8 +35,6 @@
         details: null,
         subject: null,
         config: this.$store.getters.config,
-        rno: this.$store.getters.rno,
-        name: this.$store.getters.name,
       }
     }
   }

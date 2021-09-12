@@ -43,8 +43,8 @@ export default {
       console.log(formData)
 
       this.clearAllData('messages')
-      axios.post('/api-token-auth/', {
-        rno: this.rollnum,
+      axios.post('/api/token-auth/', {
+        username: this.rollnum,
         password: this.password
       })
         .then(res => {
@@ -52,10 +52,12 @@ export default {
           
           localStorage.setItem('token', res.data.access)
           localStorage.setItem('rno', this.rollnum)
-          axios.get('/login/info/'+this.rollnum+'/', {headers: {'Authorization': 'Bearer '+res.data.access}})
+          axios.get('/api/profile/', {headers: {'Authorization': 'Bearer '+res.data.access}})
               .then(resp => {
                 localStorage.setItem('name', resp.data.name);
                 this.$store.commit('setName', resp.data.name)
+                localStorage.setItem('currentClass', resp.data.current_class);
+                this.$store.commit('setCurrentClass', resp.data.current_class)
                 console.log(resp)
               })
               .catch(error => {

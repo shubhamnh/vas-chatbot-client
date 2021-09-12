@@ -24,8 +24,9 @@
 
     <div class="mdl-layout__drawer">
       <span v-if="!auth" class="mdl-layout-title">VAS</span>
-      <span v-if="auth" class="mdl-layout-title">{{name}}</span>
-      <span v-if="auth" class="mdl-layout-title">{{rno}}</span>
+      <span v-if="auth" class="mdl-layout-title" >{{name}}</span>
+      <span v-if="auth" class="mdl-layout-title" style="font-size:1rem">{{currentClass}}</span>
+      <span v-if="auth" class="mdl-layout-title" style="font-size:1rem">{{rno}}</span>
       <nav class="mdl-navigation">
         <router-link class="mdl-navigation__link" v-if="!auth" key="login" to="/" @click.native="hideMenu">Login</router-link>
         <router-link class="mdl-navigation__link" v-if="auth" key="chat" to="/chat" @click.native="hideMenu">Chat</router-link>
@@ -46,8 +47,8 @@
 </template>
 
 <script>
-//import { EventBus } from './event-bus.js'
 require('material-design-lite')
+
 export default {
   name: 'app',
   computed: {
@@ -59,6 +60,9 @@ export default {
     },
     name () {
       return this.$store.getters.name
+    },
+    currentClass () {
+      return this.$store.getters.currentClass
     }
   },
   created () {
