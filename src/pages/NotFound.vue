@@ -274,7 +274,9 @@
 </template>
 
 <script>
-
+    export default {
+    name: "NotFound",
+    }
 </script>
 
 <style scoped>
@@ -298,7 +300,7 @@ body {
   -webkit-box-pack: center;
           justify-content: center;
   font-family: "Nunito Sans";
-  color: var(--blue);
+  color: let(--blue);
   font-size: 1em;
 }
 
@@ -343,8 +345,8 @@ h2 {
   margin: 5px 0px;
 }
 .btn.green {
-  border: 4px solid var(--green);
-  color: var(--blue);
+  border: 4px solid let(--green);
+  color: let(--blue);
 }
 .btn.green:before {
   content: "";
@@ -353,14 +355,14 @@ h2 {
   top: 0;
   width: 0%;
   height: 100%;
-  background: var(--green);
+  background: let(--green);
   z-index: -1;
   -webkit-transition: 0.2s ease;
   transition: 0.2s ease;
 }
 .btn.green:hover {
-  color: var(--white);
-  background: var(--green);
+  color: let(--white);
+  background: let(--green);
   -webkit-transition: 0.2s ease;
   transition: 0.2s ease;
 }

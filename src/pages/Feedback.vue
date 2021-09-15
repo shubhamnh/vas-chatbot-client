@@ -12,9 +12,9 @@
 </template>
 
 <script>
-  import axios from 'axios'
+import axios from 'axios'
   export default {
-    name: "feedback-view",
+    name: "Feedback",
     methods: {
       submit () {
         axios.post('/api/feedback/', {subject: this.subject, details: this.details}, this.config)

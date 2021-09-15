@@ -21,21 +21,21 @@
 </template>
 
 <script>
-  export default {
-    name: "notif",
-    mounted: function(){
-      this.$store.dispatch('getNotifs')
+export default {
+  name: "GroupNotification",
+  mounted () {
+    this.$store.dispatch('getNotifs')
+  },
+  computed: {
+    notifs () {
+      // this.scrollToEnd()
+      return this.$store.getters.notifs
     },
-    computed: {
-      notifs () {
-        // this.scrollToEnd()
-        return this.$store.getters.notifs
-      },
-      serverurl () {
-        return process.env.SERVER_FILES_URL
-      }
+    serverurl () {
+      return process.env.SERVER_FILES_URL
     }
   }
+}
 </script>
 
 <style scoped>

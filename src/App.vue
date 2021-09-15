@@ -15,7 +15,7 @@
               </label>
 
               <label v-if="auth" class="mdl-button mdl-js-button mdl-button--icon" style="padding-top:18px;padding-left:18px;padding-bottom:10px;">
-                  <router-link v-if="auth" key="notif" to="/notif">
+                  <router-link v-if="auth" key="notif" to="/notifications">
                     <i class="material-icons">notifications</i>
                   </router-link>
               </label>

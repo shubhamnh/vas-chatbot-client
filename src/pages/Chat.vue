@@ -5,8 +5,12 @@
                 <li v-for="(message, index) in this.messages" :key="index" stagger="1000" style="width:100%">
                     <div v-if="message.who === 'bot'" class="msj macro">
                         <div class="avatar"><img class="img-circle" style="width:100%;" src="../assets/bot.svg" /></div>
-                        <div class="text text-l">
+                        <div v-if="message.text" class="text text-l">
                             <p><span v-html="message.text"></span></p>
+                            <p><small>{{message.time}}</small></p>
+                        </div>
+                        <div v-else-if="message.image" class="text text-l">
+                            <img :src="message.image" alt="">
                             <p><small>{{message.time}}</small></p>
                         </div>
                     </div>
@@ -51,57 +55,65 @@
 </template>
 
 <script>
-  import data from '../data'
   import axios from 'axios'
-  import idb from '../idb'
+  import { dbPromise, writeData, clearAllData, readAllData } from '../helpers/utility'
   
   export default {
+    name: "Chat",
     methods: {
-      processQuery: function () {
+      processQuery () {
         this.query = this.query.trim()
-        this.messages.push({'text': this.query, 'time': this.currentTime(), 'who': 'me',})
-        this.writeData('messages', {'text': this.query, 'time': this.currentTime(), 'who': 'me'}, this.messages.length+1)
+        const userMessage = {
+            'text': this.query,
+            'time': this.currentTime(),
+            'who': 'me',
+        }
+
+        this.messages.push(userMessage)
+        writeData(dbPromise, 'messages', userMessage, this.messages.length + 1)
 
         axios.post('/api/query/', {query: this.query}, this.config)
             .then(res => {
               this.processing = false
-              this.messages.push({'text': res.data.response[0].text, 'time': this.currentTime(), 'who': 'bot',})
-              this.writeData('messages', {'text': res.data.response[0].text, 'time': this.currentTime(), 'who': 'bot'}, this.messages.length+1)
+
+              res.data.response.forEach(message => {
+                let botMessage = {
+                    'time': this.currentTime(),
+                    'who': 'bot',
+                }
+                for (const key in message) {
+                    botMessage[key] = message[key]
+                    this.messages.push(botMessage)
+                    writeData(dbPromise, 'messages', botMessage, this.messages.length + 1)
+                }
+              });
+              
               console.log(res)
             })
             .catch(error => {
               console.log(error)
-              this.processingText = 'An error occurred..'
+              this.processingText = 'Something went wrong..'
             })
 
         this.query = ''
         this.processingText = 'Just a moment....'
         this.processing = true
       },
-      sendfaq: function(query) {
+      sendfaq (query) {
           this.query = query
           this.processQuery()
       },
       currentTime(){
-        var date = new Date()
-        var hours = date.getHours()
-        var minutes = date.getMinutes()
-        var ampm = hours >= 12 ? 'PM' : 'AM'
+        let date = new Date()
+        let hours = date.getHours()
+        let minutes = date.getMinutes()
+        let ampm = hours >= 12 ? 'PM' : 'AM'
         hours = hours % 12
         hours = hours === 0 ? 12 : hours // the hour '0' should be '12'
         minutes = minutes < 10 ? '0' + minutes : minutes
-        var strTime = hours + ':' + minutes + ' ' + ampm
+        let strTime = hours + ':' + minutes + ' ' + ampm
         return strTime
-      },
-      writeData(st, data, i) {
-        return this.dbPromise
-          .then(function(db) {
-            var tx = db.transaction(st, 'readwrite');
-            var storage = tx.objectStore(st);
-            storage.put(data, i);
-            return tx.complete;
-        });
-      },
+      }
     },
     computed: {
       messages() {
@@ -112,18 +124,18 @@
         const container = this.$refs.messview
         container.scrollTop = container.scrollHeight
     },
-	updated() {
+	updated () {
 		const container = this.$refs.messview
         container.scrollTop = container.scrollHeight
     },
     data () {
       return {
         query: '',
-        messno: data.messages.length,
         config: this.$store.getters.config,
+        // messages: this.$store.getters.messages,
         processing: false,
         processingText: 'Just a moment....',
-        dbPromise: idb.open('messages-store'),
+        dbPromise: dbPromise,
         faqs: ['Current lecture','Todays lecture','Tomorrows lecture','Next lecture','My Result','My Pointer']
       }
     }

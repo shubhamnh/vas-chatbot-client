@@ -1,8 +1,8 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import axios from 'axios'
-import router from './router'
-import idb from './idb'
+import router from '../router'
+import { dbPromise, clearAllData } from '../helpers/utility'
 
 
 Vue.use(Vuex)
@@ -13,12 +13,11 @@ export default new Vuex.Store({
     rno: null,
     name: null,
     currentClass: null,
-    messages: null,
+    messages: [],
     settings: null,
     config: null,
     notifs: null,
     personal: null,
-    dbPromise: null,
   },
   mutations: {
     authUser (state, userData) {
@@ -58,11 +57,8 @@ export default new Vuex.Store({
       console.log(messagedata)
       state.messages.push({'text': messagedata.message, 'time': messagedata.time, 'who': messagedata.who,})
     },
-    messages (state, messages) {
+    setMessages (state, messages) {
       state.messages = messages
-    },
-    dbPromise (state, promise) {
-      state.dbPromise = promise
     }
   },
   //commit for mutations, dispatch for actions
@@ -90,15 +86,7 @@ export default new Vuex.Store({
       commit('clearAuthData');
       localStorage.removeItem('token');
       localStorage.removeItem('name');
-      
-      var dbPromise = idb.open('messages-store')
-      dbPromise
-        .then(function(db) {
-          var tx = db.transaction('messages', 'readwrite');
-          var storage = tx.objectStore('messages');
-          storage.clear();
-          return tx.complete;
-        })
+      clearAllData(dbPromise, 'messages')
     },
     verifyToken ({commit, state}) {
       axios.post('/api/token-verify/', {
@@ -110,7 +98,6 @@ export default new Vuex.Store({
         .catch(error => {
           console.log(error)
         })
-
     },
     getNotifs ({commit, state}) {
       axios.get('/api/groupnotif/', state.config)
@@ -131,13 +118,7 @@ export default new Vuex.Store({
           .catch(error => {
             console.log(error)
           })
-    },
-    setMessages ({commit}, messages) {
-      commit('messages', messages)
     }
-    // updateInterests ({commit, state}, interests) {
-    //
-    // }
   },
   getters: {
     user (state) {
@@ -169,9 +150,6 @@ export default new Vuex.Store({
     },
     config (state) {
       return state.config
-    },
-    dbPromise (state) {
-      return state.dbPromise
     }
   }
 })

@@ -4,14 +4,14 @@
 // file that will precache your site's local assets.
 // See https://github.com/facebookincubator/create-react-app/issues/2272#issuecomment-302832432
 
-// var getTitle = function (title) {
+// let getTitle = function (title) {
         // if (title === "") {
                 // title = "TITLE DEFAULT";
         // }
         // return title;
 // };
-// var getNotificationOptions = function (message, message_tag) {
-        // var options = {
+// let getNotificationOptions = function (message, message_tag) {
+        // let options = {
                 // body: message,
                 // icon: '/img/icon_120.png',
                 // tag: message_tag,
@@ -27,15 +27,15 @@
 // self.addEventListener('push', function(event) {
         // try {
                 // Push is a JSON
-                // var response_json = event.data.json();
-                // var title = response_json.title;
-                // var message = response_json.message;
-                // var message_tag = response_json.tag;
+                // let response_json = event.data.json();
+                // let title = response_json.title;
+                // let message = response_json.message;
+                // let message_tag = response_json.tag;
         // } catch (err) {
                 // Push is a simple text
-                // var title = "";
-                // var message = event.data.text();
-                // var message_tag = "";
+                // let title = "";
+                // let message = event.data.text();
+                // let message_tag = "";
         // }
         // self.registration.showNotification(getTitle(title), getNotificationOptions(message, message_tag));
         // Optional: Comunicating with our js application. Send a signal
@@ -58,8 +58,8 @@
         // If yes: focus on the tab.
         // If no: open a tab with the URL.
         // event.waitUntil(clients.matchAll({type: 'window', includeUncontrolled: true}).then(function(windowClients) {
-                        // for (var i = 0; i < windowClients.length; i++) {
-                                // var client = windowClients[i];
+                        // for (let i = 0; i < windowClients.length; i++) {
+                                // let client = windowClients[i];
                                 // if ('focus' in client) {
                                         // return client.focus();
                                 // }
@@ -69,14 +69,14 @@
 // });
 
 
- var getTitle = function (title) {
+ let getTitle = function (title) {
         if (title === "") {
                 title = "VAS";
         }
         return title;
 }
   , getNotificationOptions = function (message, message_tag) {
-        var options = {
+        let options = {
                 body: message,
                 icon: '/static/img/icons/android-icon-72x72.png',
                 tag: message_tag,
@@ -89,15 +89,15 @@
 self.addEventListener('push', function(event) {
         try {
                 // Push is a JSON
-                var response_json = event.data.json();
-                var title = response_json.title;
-                var message = response_json.message;
-                var message_tag = response_json.tag;
+                let response_json = event.data.json();
+                let title = response_json.title;
+                let message = response_json.message;
+                let message_tag = response_json.tag;
         } catch (err) {
                 // Push is a simple text
-                var title = "";
-                var message = event.data.text();
-                var message_tag = "";
+                let title = "";
+                let message = event.data.text();
+                let message_tag = "";
         }
 
         self.registration.showNotification(getTitle(title), getNotificationOptions(message, message_tag));
@@ -121,8 +121,8 @@ self.addEventListener('notificationclick', function(event) {
         // If yes: focus on the tab.
         // If no: open a tab with the URL.
         event.waitUntil(clients.matchAll({type: 'window', includeUncontrolled: true}).then(function(windowClients) {
-                        for (var i = 0; i < windowClients.length; i++) {
-                                var client = windowClients[i];
+                        for (let i = 0; i < windowClients.length; i++) {
+                                let client = windowClients[i];
                                 if ('focus' in client) {
                                         return client.focus();
                                 }

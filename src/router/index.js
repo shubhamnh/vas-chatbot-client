@@ -1,16 +1,16 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import axios from 'axios'
-import ChatView from './components/ChatView'
-import SettingsView from './components/SettingsView'
-import LoginView from './components/LoginView'
-import NotifView from './components/NotifView'
-import IndividualView from './components/IndividualView'
-import FeedbackView from './components/FeedbackView'
-import AboutView from './components/AboutView'
-import NotFoundComponent from './components/NotFoundComponent'
-import store from './store'
-import idb from './idb'
+import Chat from '../pages/Chat'
+import Settings from '../pages/Settings'
+import Login from '../pages/Login'
+import GroupNotification from '../pages/GroupNotification'
+import PersonalNotification from '../pages/PersonalNotification'
+import Feedback from '../pages/Feedback'
+import About from '../pages/About'
+import NotFound from '../pages/NotFound'
+import store from '../store'
+import { dbPromise, readAllData } from '../helpers/utility'
 
 Vue.use(Router)
 
@@ -22,23 +22,21 @@ export default new Router({
     {
       path: '/',
       name: 'Virtual Assistant for Students',
-      component: LoginView
+      component: Login
     },
     {
       path: '/chat',
       name: 'Chatbot',
-      component: ChatView,
+      component: Chat,
       beforeEnter (to, from, next) {
         if (store.state.Token) {
-          var dbPromise = idb.open('messages-store')
-          dbPromise.then(function(db) {
-              var tx = db.transaction('messages', 'readonly');
-              var storage = tx.objectStore('messages');
-              storage.getAll().then(function(res) {
-                  store.commit('messages', res);
-                  next()
-                })
-            });
+          readAllData(dbPromise, 'messages').then( messages => {
+            store.commit('setMessages', messages)
+            next()
+          }).catch(err => {
+            console.log(err)
+          })
+          // next()
         } else {
           next('/')
         }
@@ -47,7 +45,7 @@ export default new Router({
     {
       path: '/settings',
       name: 'Settings',
-      component: SettingsView,
+      component: Settings,
       beforeEnter (to, from, next) {
         if (store.state.Token) {
           axios.get('/api/settings/', store.state.config)
@@ -70,9 +68,9 @@ export default new Router({
       }
     },
     {
-      path: '/notif',
+      path: '/notifications',
       name: 'Notifications',
-      component: NotifView,
+      component: GroupNotification,
       beforeEnter (to, from, next) {
         if (store.state.Token) {
           next()
@@ -84,7 +82,7 @@ export default new Router({
     {
       path: '/personal',
       name: 'Personal Messages',
-      component: IndividualView,
+      component: PersonalNotification,
       beforeEnter (to, from, next) {
         if (store.state.Token) {
           next()
@@ -96,7 +94,7 @@ export default new Router({
     {
       path: '/feedback',
       name: 'Feedback',
-      component: FeedbackView,
+      component: Feedback,
       beforeEnter (to, from, next) {
         if (store.state.Token) {
           next()
@@ -108,12 +106,12 @@ export default new Router({
     {
       path: '/about',
       name: 'About',
-      component: AboutView
+      component: About
     },
     {
       path: '*',
       name: 'Page Not Found',
-      component: NotFoundComponent
+      component: NotFound
     }
   ]
 })

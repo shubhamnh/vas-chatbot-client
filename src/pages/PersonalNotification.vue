@@ -16,8 +16,8 @@
 
 <script>
   export default {
-    name: "notif",
-    mounted: function(){
+    name: "PersonalNotification",
+    mounted () {
       this.$store.dispatch('getPersonal')
     },
     computed: {
@@ -29,13 +29,16 @@
 </script>
 
 <style scoped>
-    .custom {
-        margin-bottom:10px;border-radius:10px;min-height:125px;width:100%;
-    }
-    .notifs {
-        padding:20px;
-        overflow:auto;
-        background:#e0e0de;
-        height:100%;
-    }
+  .custom {
+    margin-bottom: 10px;
+    border-radius: 10px;
+    min-height: 125px;
+    width: 100%;
+  }
+  .notifs {
+    padding:20px;
+    overflow:auto;
+    background:#e0e0de;
+    height:100%;
+  }
 </style>
