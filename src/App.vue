@@ -5,20 +5,20 @@
         
         <span class="mdl-layout-title" style="padding-bottom:10px;">{{$route.name}}</span>
         
+        <div class="mdl-layout-spacer"></div>
 
-          <div class="mdl-layout-spacer"></div>
-              
-              <label v-if="auth" class="mdl-button mdl-js-button mdl-button--icon" style="padding-top:18px;padding-left:18px;padding-bottom:10px;">
-                  <router-link v-if="auth" key="personal" to="/personal">
-                    <i class="material-icons">message</i>
-                  </router-link>
-              </label>
-
-              <label v-if="auth" class="mdl-button mdl-js-button mdl-button--icon" style="padding-top:18px;padding-left:18px;padding-bottom:10px;">
-                  <router-link v-if="auth" key="notif" to="/notifications">
-                    <i class="material-icons">notifications</i>
-                  </router-link>
-              </label>
+        <nav>
+          <router-link v-if="auth" key="personal" to="/personal">
+            <label class="mdl-button mdl-js-button mdl-button--icon" style="padding-top:18px;padding-left:18px;padding-bottom:10px;">
+              <i class="material-icons">message</i>
+            </label>
+          </router-link>
+          <router-link v-if="auth" key="notif" to="/notifications">
+            <label class="mdl-button mdl-js-button mdl-button--icon" style="padding-top:18px;padding-left:18px;padding-bottom:10px;">
+              <i class="material-icons">notifications</i>
+            </label>
+          </router-link>
+        </nav>
       </div>
     </header>
 
@@ -67,7 +67,6 @@ export default {
   },
   created () {
     this.$store.dispatch('tryAutoLogin')
-    this.$store.dispatch('verifyToken')
   },
   methods: {
     hideMenu: function () {

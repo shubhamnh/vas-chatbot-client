@@ -3,16 +3,29 @@
         <div>
             <ul class="messview" ref="messview">
                 <li v-for="(message, index) in this.messages" :key="index" stagger="1000" style="width:100%">
-                    <div v-if="message.who === 'bot'" class="msj macro">
-                        <div class="avatar"><img class="img-circle" style="width:100%;" src="../assets/bot.svg" /></div>
-                        <div v-if="message.text" class="text text-l">
-                            <p><span v-html="message.text"></span></p>
-                            <p><small>{{message.time}}</small></p>
+                    <div v-if="message.who === 'bot'">
+                        <div v-if="message.text" class="msj macro">
+                            <div class="avatar"><img class="img-circle" style="width:100%;" src="../assets/bot.svg" /></div>
+                            <div class="text text-l">
+                                <p><span v-html="message.text"></span></p>
+                                <p><small>{{message.time}}</small></p>
+                            </div>
                         </div>
-                        <div v-else-if="message.image" class="text text-l">
-                            <img :src="message.image" alt="">
-                            <p><small>{{message.time}}</small></p>
+
+                        <div v-else-if="message.image" class="msj macro img-res">
+                            <div class="text text-l">
+                                <img :src="message.image" class="content-pad">
+                                <p><small>{{message.time}}</small></p>
+                            </div>
                         </div>
+
+                        <div v-else-if="message.table" class="msj macro">
+                            <div class="text text-l">
+                                <div class="table content-pad" v-html="message.table"></div>
+                                <p><small>{{message.time}}</small></p>
+                            </div>
+                        </div>
+
                     </div>
 
                     <div v-else class="msj-rta macro">
@@ -21,7 +34,7 @@
                             <p><small>{{message.time}}</small></p>
                         </div>
                         <div class="avatar" style="padding:0px 0px 0px 10px !important">
-                            <img class="img-circle" style="width:100%;" src="../assets/user.jpg" />
+                            <img class="img-circle" style="width:100%;" src="../assets/user.png" />
                         </div>
                     </div>
                 </li>
@@ -91,7 +104,11 @@
               console.log(res)
             })
             .catch(error => {
-              console.log(error)
+              console.log(error) 
+              if (error.response.status === 401) {
+                this.$store.dispatch('logout')
+                this.$router.push('/')
+              }
               this.processingText = 'Something went wrong..'
             })
 
@@ -136,7 +153,7 @@
         processing: false,
         processingText: 'Just a moment....',
         dbPromise: dbPromise,
-        faqs: ['Current lecture','Todays lecture','Tomorrows lecture','Next lecture','My Result','My Pointer']
+        faqs: ['Hello','What\'s the schedule?','Time Table','Tomorrow\'s lectures', 'Apply for Concession']
       }
     }
   }
@@ -180,6 +197,13 @@
     }
     .msj{
         float:left;background:white;
+    }
+    .img-res{
+        justify-content: center;
+        padding: 1rem 0rem;
+    }
+    .img-res >>> img {
+        border-radius:10px;
     }
     .faq {
         overflow-x: auto;
@@ -226,7 +250,25 @@
     }  
     .messview > li:last-of-type{
         padding-bottom: 50px;
-    }  
+    }
+    
+    .table >>> table {
+        border-collapse: collapse;
+    }
+
+    .table >>> th {
+        padding: 4px;
+        font-size: 12px;
+    }
+
+    .table >>> td {
+        padding: 4px;
+        font-size: 12px;
+    }
+
+    .content-pad {
+        padding-bottom:3px
+    }
 
     p {
         margin-top: 5px;

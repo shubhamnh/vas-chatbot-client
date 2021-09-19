@@ -68,36 +68,39 @@ export default new Vuex.Store({
         commit('clearAuthData')
       }, expirationTime * 1000)
     },
-    tryAutoLogin ({commit}) {
+    tryAutoLogin ({commit, dispatch}) {
       const token = localStorage.getItem('token')
       if (!token) {
         return
       }
-      commit('authUser', {
-        token: token,
-        rno: localStorage.getItem('rno')
-      })
-      commit('setName', localStorage.getItem('name'))
-      commit('setCurrentClass', localStorage.getItem('currentClass'))
-      commit('setConfig')
-      router.replace('/chat')
+      axios.post('/api/token-verify/', {
+        token: token
+      }).then(res => {
+          console.log(res)
+          commit('authUser', {
+            token: token,
+            rno: localStorage.getItem('rno')
+          })
+          commit('setName', localStorage.getItem('name'))
+          commit('setCurrentClass', localStorage.getItem('currentClass'))
+          commit('setConfig')
+          router.replace('/chat')
+        })
+        .catch(error => {
+          // Token Expired
+          if (error.response.status === 401) {
+            dispatch('logout')
+            router.push('/')
+          } else {
+            console.log(error)
+          }
+        })
     },
     logout ({commit}) {
       commit('clearAuthData');
       localStorage.removeItem('token');
       localStorage.removeItem('name');
       clearAllData(dbPromise, 'messages')
-    },
-    verifyToken ({commit, state}) {
-      axios.post('/api/token-verify/', {
-        token: state.Token
-      })
-        .then(res => {
-          console.log(res)
-        })
-        .catch(error => {
-          console.log(error)
-        })
     },
     getNotifs ({commit, state}) {
       axios.get('/api/groupnotif/', state.config)
