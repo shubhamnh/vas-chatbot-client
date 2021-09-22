@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="settings">
     <div style="padding:1.5rem 0rem">
       <p>You'll receive notifications based on your interests selected here.</p>
     </div>
@@ -175,6 +175,9 @@ export default {
 </script>
 
 <style scoped>
+  .settings {
+    text-align: center;
+  }
   .interest{
     margin-right:93px;
     width: 30px;

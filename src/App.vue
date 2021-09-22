@@ -3,18 +3,18 @@
     <header class="mdl-layout__header">
       <div class="mdl-layout__header-row">
         
-        <span class="mdl-layout-title" style="padding-bottom:10px;">{{$route.name}}</span>
+        <span class="mdl-layout-title">{{$route.name}}</span>
         
         <div class="mdl-layout-spacer"></div>
 
         <nav>
           <router-link v-if="auth" key="personal" to="/personal">
-            <label class="mdl-button mdl-js-button mdl-button--icon" style="padding-top:18px;padding-left:18px;padding-bottom:10px;">
+            <label class="mdl-button mdl-js-button mdl-button--icon">
               <i class="material-icons">message</i>
             </label>
           </router-link>
           <router-link v-if="auth" key="notif" to="/notifications">
-            <label class="mdl-button mdl-js-button mdl-button--icon" style="padding-top:18px;padding-left:18px;padding-bottom:10px;">
+            <label class="mdl-button mdl-js-button mdl-button--icon">
               <i class="material-icons">notifications</i>
             </label>
           </router-link>
@@ -37,10 +37,8 @@
       </nav>
     </div>
 
-    <main class="mdl-layout__content back">
-        <div class="page-content">
-            <router-view></router-view>
-        </div>
+    <main class="mdl-layout__content">
+        <router-view></router-view>
     </main>
   </div>
 
@@ -85,9 +83,6 @@ export default {
 <style>
 @import url('https://fonts.googleapis.com/icon?family=Material+Icons');
  @import url('https://code.getmdl.io/1.2.1/material.blue-red.min.css');
-body {
-  margin: 0;
-}
 
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
@@ -96,35 +91,6 @@ body {
   color: #2c3e50;
 }
 
-main {
-  text-align: center;
-}
-
 a { color: inherit; }
 
-.back {
-  background:white;
-  height:100%;
-}
-.personal {
-    padding:7px;
-}
-header {
-  margin: 0;
-  height: 56px;
-  padding: 0 16px 0 24px;
-  background-color: #35495E;
-  color: #ffffff;
-}
-
-header span {
-  display: block;
-  position: relative;
-  font-size: 20px;
-  line-height: 1;
-  letter-spacing: .02em;
-  font-weight: 400;
-  box-sizing: border-box;
-  padding-top: 16px;
-}
 </style>

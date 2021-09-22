@@ -1,7 +1,7 @@
 <template>
 
         <div class="aboutbox">
-            <img src="../assets/logo.png" style="width:65%">
+            <img class="logo" src="../assets/logo.png" style="width:65%">
             <p>This app was developed by<br><b>Vighnesh Shetty, Aman Daga & Shubham Jain</b><br>under the guidance of<br><b>Prof. Rugved Deolekar</b></p>
             <p>App Logo made by<br><b>Ajinkya Salvi</b></p>
         </div>
@@ -15,7 +15,7 @@ export default {
 </script>
 
 <style scoped>
-img {
+.logo {
     display: block;
     margin-left: auto;
     margin-right: auto;

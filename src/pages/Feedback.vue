@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="feedback">
             <br><br>
             <mdl-textfield floating-label="Subject" v-model="subject" class="input"></mdl-textfield>
             <br>
@@ -41,4 +41,7 @@ import axios from 'axios'
 </script>
 
 <style scoped>
+  .feedback {
+    text-align: center;
+  }
 </style>

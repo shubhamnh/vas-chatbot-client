@@ -149,9 +149,7 @@ MaterialTextfield.prototype.checkValidity = function () {
 </script>
 
 <style scoped>
-  body{
-    padding-top: 40px;
-    padding-bottom: 40px;
-    background-color: #303F9F;
+  .login {
+    text-align: center;
   }
 </style>

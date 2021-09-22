@@ -30,13 +30,11 @@
 
 <style scoped>
   .custom {
-    margin-bottom: 10px;
-    border-radius: 10px;
-    min-height: 125px;
-    width: 100%;
+    margin: 20px auto;
+    border-radius:10px;
+    min-height:125px;
   }
   .notifs {
-    padding:20px;
     overflow:auto;
     background:#e0e0de;
     height:100%;

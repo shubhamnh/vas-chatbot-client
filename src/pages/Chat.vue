@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="chat">
         <div>
             <ul class="messview" ref="messview">
                 <li v-for="(message, index) in this.messages" :key="index" stagger="1000" style="width:100%">
@@ -40,21 +40,21 @@
                 </li>
                 
                 <li v-if="this.processing" style="width:100%">
-                    <div class="msj" style="margin-bottom:10px;width:38%;border-radius:10px;padding:5px;display:flex;">
+                    <div class="msj" style="margin-bottom:10px;width:80%;border-radius:5px;padding:5px;display:flex;">
                         <div>
-                            <p style="line-height= 13px;font-size= 12px;">{{processingText}}</p>
+                            <p style="line-height= 13px;font-size= 12px;" v-html="processingText"></p>
                         </div>
                     </div>
                 </li>
             </ul>
         </div>
         <div class="typefield">
-            <div class="faq" style="position:relative; display:flex; width:100%;">
-                    <button v-for="(faq, index) in this.faqs" :key="index" v-mdl type="button" @click="sendfaq(faq)" class="mdl-chip chip">
-                        <span v-mdl class="mdl-chip__text">{{faq}}</span>
-                    </button>
+            <div class="faq">
+                <button v-for="(faq, index) in this.faqs" :key="index" v-mdl type="button" @click="sendfaq(faq)" class="mdl-chip chip">
+                    <span v-mdl class="mdl-chip__text">{{faq}}</span>
+                </button>
             </div>
-            <div style="position:relative; display:flex; width:100%;">
+            <div style="position:relative; display:flex; width:100%; margin-left:10px;">
                 <div v-mdl class="mdl-textfield mdl-js-textfield" style="width:80%;">
                     <textarea v-mdl  @keyup.enter="processQuery" class="mdl-textfield__input" type="text" rows="1" v-model="query" id="query-text"></textarea>
                     <label v-mdl class="mdl-textfield__label" for="query-text">How can I help you?</label>
@@ -113,8 +113,12 @@
             })
 
         this.query = ''
-        this.processingText = 'Just a moment....'
+        this.processingText = "Just a moment...."
         this.processing = true
+        setTimeout(()=>{
+            this.processingText = "Just a moment....<br>First response may take a minute or two. I'm waking up from my sleep!"
+        }, 5000)
+        
       },
       sendfaq (query) {
           this.query = query
@@ -160,6 +164,9 @@
 </script>
 
 <style scoped>
+    .chat {
+        text-align: center;
+    }
     .mytext{
         border:0;padding:10px;background:whitesmoke;
     }
@@ -188,9 +195,13 @@
     }
     .messview{
         background-color:#e0e0de;
+        width: 100%;
+        width: -moz-available;
+        width: -webkit-fill-available;
+        width: fill-available;
     }
     .macro{
-        margin-bottom:10px;width:85%;border-radius:10px;padding:5px;display:flex;
+        margin-bottom:10px;width:85%;border-radius:5px;padding:5px;display:flex;
     }
     .msj-rta{
         float:right;background:whitesmoke;
@@ -203,14 +214,16 @@
         padding: 1rem 0rem;
     }
     .img-res >>> img {
-        border-radius:10px;
+        border-radius:5px;
     }
     .faq {
-        overflow-x: auto;
+        overflow: auto;
+        position: relative;
+        display: flex;
+        width: 100%;
     }
     .chip {
-        margin-top:5px;
-        margin-right:5px;
+        margin: 5px;
     }
 
     .frame{
@@ -226,22 +239,19 @@
         width:100%;
         background:white;
         border-radius:10px;
-        padding:0px 10px;
     }
     div ul{
-        height:90%;
-        width:98%;
+        height:85%;
         overflow:hidden;
         overflow-y:scroll;
     }
 
     ul {
         font-family: 'Roboto';
-        width:100%;
         list-style-type: none;
-        padding:18px;
+        padding: 0px 12px;
+        margin: 0px;
         position:absolute;
-        bottom:36px;
         display:flex;
         flex-direction: column;
     }
@@ -249,7 +259,7 @@
         padding-top: 10px;
     }  
     .messview > li:last-of-type{
-        padding-bottom: 50px;
+        padding-bottom: 40px;
     }
     
     .table >>> table {
